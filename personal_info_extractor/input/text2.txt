@@ -1,0 +1,5 @@
+Interviewer: Hello, thanks for coming in. Could you please introduce yourself?
+Candidate: Hi! My name is Clara Lim. I'm 28 years old and originally from Singapore. I studied Computer Science at the National University of Singapore.
+Interviewer: And what do you enjoy doing in your free time, Clara?
+Candidate: I'm really passionate about photography, especially street photography, and I also love cycling around the island. People often describe me as quite observant and creative.
+Interviewer: That's interesting.

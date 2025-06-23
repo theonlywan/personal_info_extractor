@@ -1,0 +1,4 @@
+Interviewer: Thanks for your time. Tell me about your current role.
+Candidate: I'm currently a project manager. I've been working remotely for the past few years.
+Interviewer: Anything else you'd like to share?
+Candidate: Not really, I just enjoy solving problems.

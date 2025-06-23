@@ -1,0 +1,24 @@
+"""
+You are a personal information extractor.
+
+Given the interview dialogue below, extract:
+- Name
+- Age
+- Location (if available)
+- Education background
+- Interests
+- Personality traits (inferred from tone or content)
+
+Only return structured JSON in this format:
+{{
+  "name": null,
+  "age": null,
+  "location": null,
+  "education": null,
+  "interests": [],
+  "personality_traits": []
+}}
+
+Interview:
+{dialogue}
+"""
