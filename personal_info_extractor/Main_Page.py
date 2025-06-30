@@ -15,7 +15,7 @@ if not os.getenv("OPENAI_API_KEY"):
 # Import the app and schema components
 try:
     from app import app
-    from schema.personal_profile import State, PersonalProfile
+    from schema.personal_profile import State, PersonalProfile, LabeledString, LabeledInt, LabeledList
 except ImportError as e:
     st.error(f"Failed to import backend components. Ensure 'app.py' and 'schema/personal_profile.py' are correctly defined and in your PYTHONPATH. Error: {e}")
     st.stop()
@@ -30,7 +30,7 @@ st.subheader("1. Upload Interview Data")
 
 uploaded_file = st.file_uploader(
     "Choose an audio file (.mp3, .wav, .m4a) or a text transcript (.txt)",
-    type=["mp3", "wav", "m4a", "txt"]
+    type=["mp3", "wav", "m4a", "txt", "pdf"],
 )
 
 if 'processing_status' not in st.session_state:
@@ -45,6 +45,8 @@ if uploaded_file is not None:
         input_type = "audio"
     elif file_extension == "txt":
         input_type = "text"
+    elif file_extension == "pdf":
+        input_type = "pdf"
     else:
         st.error(f"Unsupported file type: .{file_extension}. Please upload an audio file (.mp3, .wav, .m4a) or a text transcript (.txt).")
         st.session_state['processing_status'] = "Unsupported file type."
@@ -144,11 +146,69 @@ if uploaded_file is not None and st.session_state['final_state'] is not None:
         st.json(personal_profile.model_dump())
         
         st.write("---")
-        st.markdown("##### Tabular View:")
-        profile_data = personal_profile.model_dump()
-        display_data = [{"Field": k.replace('_', ' ').title(), "Value": v if v is not None else "N/A"} for k, v in profile_data.items()]
-        df = pd.DataFrame(display_data)
-        st.dataframe(df, hide_index=True)
+        st.markdown("##### Detailed Profile Fields:")
+        
+        display_rows = []
+        field_order = [
+            "name", "age", "location", "education", "work_experience", "interests",
+            "personality_traits", "skills", "languages_spoken", "achievements",
+            "contact_info"
+        ]
+
+        for field_name in field_order:
+            field_obj = getattr(personal_profile, field_name, None)
+            
+            value = "N/A"
+            sentiment = "N/A"
+            confidence = "N/A"
+
+            if field_obj is None:
+                pass 
+            elif isinstance(field_obj, str):
+                value = field_obj if field_obj is not None else "N/A"
+            elif isinstance(field_obj, int):
+                value = str(field_obj) if field_obj is not None else "N/A"
+            elif isinstance(field_obj, list):
+                value = "; ".join(field_obj) if field_obj else "N/A"
+            elif isinstance(field_obj, (LabeledString, LabeledInt)):
+                value = field_obj.value if field_obj.value is not None else "N/A"
+                sentiment = field_obj.sentiment if field_obj.sentiment is not None else "N/A"
+                confidence = f"{field_obj.confidence:.0%}" if field_obj.confidence is not None else "N/A"
+            elif isinstance(field_obj, LabeledList):
+                value = "; ".join(field_obj.values) if field_obj.values else "N/A"
+                sentiment = field_obj.sentiment if field_obj.sentiment is not None else "N/A"
+                confidence = f"{field_obj.confidence:.0%}" if field_obj.confidence is not None else "N/A"
+            
+            if field_name in ["name", "age", "location", "contact_info"]: 
+                display_rows.append({
+                    "Field": field_name.replace('_', ' ').title(),
+                    "Value": value
+                })
+            else:
+                display_rows.append({
+                    "Field": field_name.replace('_', ' ').title(),
+                    "Value": value,
+                    "Sentiment": sentiment,
+                    "Confidence": confidence
+                })
+        
+        df_columns = ["Field", "Value"]
+        if any(row.get("Sentiment") != "N/A" for row in display_rows):
+            df_columns.extend(["Sentiment", "Confidence"])
+            
+        processed_display_rows = []
+        for row in display_rows:
+            new_row = {}
+            for col in df_columns:
+                new_row[col] = row.get(col, "N/A")
+            processed_display_rows.append(new_row)
+
+        df = pd.DataFrame(processed_display_rows, columns=df_columns)
+        st.dataframe(df, hide_index=True, use_container_width=True)
+
+        if final_state.get('current_state') == "vector_db_complete":
+            st.success("Profile successfully embedded and stored in vector database.")
+
     elif final_state.get('current_state') != "validation_failed_and_ended" and not final_state.get('errors'):
         st.warning("No personal profile could be extracted. This might be due to a lack of relevant information in the dialogue or a subtle processing issue.")
     

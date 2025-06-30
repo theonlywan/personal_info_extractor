@@ -46,7 +46,7 @@ def run(file: str) -> PersonalProfile:
     result = app.invoke(state)
 
     # Check for errors in the result
-    if result["current_state"] != "validation_complete" and result["current_state"] != "validation_failed":
+    if result["current_state"] != "vector_db_complete" and result["current_state"] != "validation_failed":
         result["errors"].append("Processing did not complete successfully.")
         raise RuntimeError("Processing did not complete successfully. State: " + str(result["current_state"]) + " Errors: " + str(result["errors"]))
 
@@ -55,6 +55,6 @@ def run(file: str) -> PersonalProfile:
 
     return result["extracted_info"]
 
-extracted_info = run("input/audio.wav")
+extracted_info = run("input/text8.txt")
 print("Extraction complete. Extracted profile:")
 print(extracted_info)

@@ -1,10 +1,11 @@
-from typing import Dict
+from typing import Dict, Any
 from schema.personal_profile import State
 from openai import OpenAI
 import re
 import os
+from PyPDF2 import PdfReader
 
-def preprocess(state: State) -> Dict[str, any]:
+def preprocess(state: State) -> Dict[str, Any]:
 
     # Check input path
     if not os.path.exists(state.input_path):
@@ -31,10 +32,20 @@ def preprocess(state: State) -> Dict[str, any]:
         with open(state.input_path, "r") as file:
             text = file.read()
 
+    elif state.input_type == "pdf":
+        try:
+            reader = PdfReader(state.input_path)
+            text = ""
+            for page in reader.pages:
+                text += page.extract_text() + "\n"
+        except Exception as e:
+            state.errors.append(f"Error reading PDF: {e}")
+            raise RuntimeError(f"Error reading PDF: {e}")
+
     # Basic preprocessing
     preprocessed_text = remove_timestamps(text)
     preprocessed_text = remove_noise_annotations(preprocessed_text)
-    preprocessed_text = remove_interviewer_dialogue(preprocessed_text)
+    # preprocessed_text = remove_interviewer_dialogue(preprocessed_text)
     preprocessed_text = normalize_whitespace(preprocessed_text)
 
     return {

@@ -1,0 +1,12 @@
+Interviewer: Alright, let's start with a simple one. What's your name? I have 'Pat' here, but also 'Patricia'.
+Candidate: Oh, it's just Pat. Or Patty. Sometimes even Patrick, but that's mostly my family. I never really settled on one.
+Interviewer: I see. And your age, for our records?
+Candidate: Well, I've celebrated twenty-five winters, but also forty-five summers. Does that narrow it down? [smirks] It's more about the journey, you know.
+Interviewer: Right... And where are you currently based? Your application mentioned "digital nomad" and "no fixed abode."
+Candidate: Precisely. This month it's been the quiet hum of a coffee shop in Lisbon. Last month, a bustling market in Marrakech. Before that, I had a brief stint renting a tiny studio in Tokyo. Home is wherever my laptop is charged.
+Interviewer: Understood. How about your educational background? Any formal institutions?
+Candidate: 'Institution' is a strong word. I spent a year at an art college in Bristol before realizing the walls were too confining. Most of what I 'learned' came from hacking together open-source projects and devouring online documentation. Call it a self-taught curriculum in digital alchemy.
+Interviewer: Fascinating. And what are your interests, Pat?
+Candidate: I dabble. Mostly it's about connecting disparate ideas – could be quantum physics one day, obscure folk music the next. I also collect antique mechanical puzzles. And I have an unhealthy obsession with optimizing my Linux shell.
+Interviewer: And your general temperament?
+Candidate: Chaotic neutral, I suppose. I'm incredibly meticulous about my code, but my desk is a disaster. I enjoy collaborating, but also thrive in complete solitude. Very adaptable, yet rigidly opinionated on certain matters.

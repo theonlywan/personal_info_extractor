@@ -21,7 +21,7 @@ def validate_extracted_info(state: State) -> Dict[str, Any]:
     try:
         if extracted_profile.name is None or extracted_profile.name.strip() == "":
             current_validation_errors.append("Extracted 'name' is missing or empty.")
-        
+
         if extracted_profile.age is not None and (extracted_profile.age < 0 or extracted_profile.age > 120):
             current_validation_errors.append(f"Extracted 'age' ({extracted_profile.age}) is outside typical human range (0-120).")
         
