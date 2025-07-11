@@ -18,6 +18,7 @@ def get_chroma_collection():
     
     try:
         _collection = _client.get_or_create_collection(name=COLLECTION_NAME)
+        
     except Exception as e:
         print(f"Error getting/creating ChromaDB collection: {e}")
         if _client:
@@ -52,8 +53,6 @@ def get_all_profiles_from_chroma() -> List[PersonalProfile]:
                 if profile_json_string:
                     try:
                         profile_dict = json.loads(profile_json_string)
-                        # Reconstruct the Pydantic model. Use model_validate for Pydantic v2.
-                        # For Pydantic v1, use PersonalProfile.parse_obj(profile_dict)
                         
                         profile_fields = PersonalProfile.model_fields.items()
 
@@ -72,7 +71,9 @@ def get_all_profiles_from_chroma() -> List[PersonalProfile]:
                         print(f"Error decoding JSON from ChromaDB metadata: {e}")
                     except Exception as e:
                         print(f"Error validating Pydantic model from ChromaDB data: {e}")
+
         return profiles
+    
     except Exception as e:
         print(f"Error retrieving profiles from ChromaDB: {e}")
         return []

@@ -1,0 +1,88 @@
+"""
+You are a personal information extractor.
+
+Given the interview dialogue below, extract the following qualities of the person being interviewed:
+- Name
+- Age
+- Location (if available)
+- Gender
+- Nationality
+- Ethnicity
+- Marital status
+- Visa or work permit status
+- Education background
+- Professional background
+- Personal projects
+- Publications or research
+- Current occupation
+- Interests
+- Goals
+- Motivations
+- Values
+- Personality traits (inferred from tone or content)
+- Communication style
+- Preferred learning style
+- Skills/Core competencies
+- Certifications
+- Tools or technologies used
+- Languages spoken
+- Achievements
+- Past challenges
+- Strengths
+- Weaknesses
+- Work preferences (team vs individual, remote vs onsite, preferred industry, ideal role)
+- Social engagement (volunteering experience, community involvement)
+- Contact information
+- Types of dialogues
+
+CRITICAL: If the interviewer addresses the candidate by a name (e.g., "Hi Alex," "Thank you, Sarah") and the candidate responds and continues the conversation as that person, infer that this is the candidate's name. 
+CRITICAL: If the candidate's education appears to be below university/college, simply state the level of education e.g. "High School".
+CRITICAL: Extract as many values as possible for each field (e.g. name - try to get full name; work_experience - try to get all work experiences)
+
+Only return structured JSON in this format:
+{{
+  "name": null,
+  "age": null,
+  "location": null,
+  "gender": null,
+  "nationality": null,
+  "ethnicity": null,
+  "marital_status": null,
+  "visa_or_work_permit_status": null,
+  "education": [],
+  "professional_background": null,
+  "personal_projects": [],
+  "publications_or_research": [],
+  "current_occupation": null,
+  "interests": [],
+  "goals": [],
+  "motivations": [],
+  "values": [],
+  "personality_traits": [],
+  "communication_style": null,
+  "preferred_learning_style": null,
+  "skills": [],
+  "certifications": [],
+  "tools_or_technologies_used": [],
+  "languages_spoken": [],
+  "achievements": [],
+  "past_challenges": [],
+  "strengths": [],
+  "weaknesses": [],
+  "work_preferences": {{
+    "team_vs_individual": null,
+    "remote_vs_onsite": null,
+    "preferred_industry": null,
+    "ideal_role": null
+  }},
+  "social_engagement": {{
+    "volunteering_experience": [],
+    "community_involvement": []
+  }},
+  "contact_info": [],
+  "dialogue_types": []
+}}
+
+Interview:
+{dialogue}
+"""
