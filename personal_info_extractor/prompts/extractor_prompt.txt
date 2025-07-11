@@ -1,71 +1,136 @@
 """
-You are a personal information extractor.
+You are a highly skilled personal information extractor and profiler.
 
-Given the interview dialogue below, extract the following qualities of the person being interviewed:
-- Name
-- Age
-- Location (if available)
-- Education background
-- Work experience
-- Interests
-- Personality traits (inferred from tone or content)
-- Skills/Core competencies
-- Languages spoken
-- Achievements
-- Contact information
+Given the interview dialogue below, extract all relevant qualities of the person being interviewed into a structured JSON object. Focus on extracting specific, granular details as defined by the schema, and infer information only when highly confident.
 
-For each piece of information (according to the structured format below), determine the candidate's sentiment towards it (e.g., 'Positive', 'Neutral', 'Negative', 'Uncertain') and their confidence level (a float between 0.0 and 1.0, where 1.0 is very confident).
-Base the sentiment and confidence *only on the candidate's direct responses* related to that information. If a piece of information is primarily stated by the Interviewer and only briefly confirmed by the Candidate, the confidence might be lower, or sentiment neutral. If a field's value cannot be extracted, set its 'value' to null and leave sentiment/confidence as null. For list fields like interests and skills, provide an overall sentiment and confidence for the list as a whole based on how the candidate discusses them.
-CRITICAL: If the interviewer addresses the candidate by a name (e.g., "Hi Alex," "Thank you, Sarah") and the candidate responds and continues the conversation as that person, infer that this is the candidate's name. 
-CRITICAL: If the candidate's education appears to be below university/college, simply state the level of education e.g. "High School".
+CRITICAL INSTRUCTIONS:
+- Extract as many entries as possible per each field from the input provided.
+- **Name Inference:** If the interviewer addresses the candidate by a name (e.g., "Hi Alex," "Thank you, Sarah") and the candidate responds and continues the conversation as that person, infer that this is the candidate's name.
+- **Education Level:** If the candidate's education appears to be below university/college (e.g., 'High School', 'Vocational Training'), represent it with a 'degree' field like "High School Diploma" or "Vocational Training Certificate" and set other associated fields (major, institution, dates) to null if not applicable.
+- **Completeness:** Extract as many valid and complete values as possible for each field. For array fields (e.g., `education`, `work_experience`, `personal_projects`), provide all identifiable entries as distinct objects within the array.
+- **Null Values:** If a field or sub-field is not found or not applicable, set its value to `null` for single values, or an empty array `[]` for lists, or an empty object `{{}}` for nested objects. Do NOT omit keys.
+- **Dialogue Type:** Classify the type or context of *this specific interview dialogue*. Choose from a broad range of interview types such as 'Technical Interview', 'Behavioral Interview', 'HR Screening', 'Executive Interview', 'Casual Conversation', 'Performance Review', 'Informational Interview', 'Client Meeting', 'Public Speech'.
+- **Achievements:** For 'achievements', extract all notable achievements or awards. For each entry, provide:
+    - 'description': A detailed description of the achievement.
+    - 'date': The year or date of the achievement.
+    - 'awarding_organization': The organization that recognized or awarded it.
+    - 'type': Classify the type of achievement (e.g., 'Award', 'Promotion', 'Patent', 'Key Project Success', 'Nobel Prize', 'Publication Recognition').
+    - 'is_major_achievement': Set this to `true` if the achievement is exceptionally significant or prestigious (e.g., a Nobel Prize, a highly recognized national/international award, a groundbreaking patent, or a major industry-defining contribution). Otherwise, set to `false`.
 
-Only return structured JSON in this format:
+Only return structured JSON strictly conforming to the following format. Ensure all fields are present, even if their values are null or empty.
+
+JSON Schema:
 {{
-  "name": {{
-    "value": null
-  }},
-  "age": {{
-    "value": null
-  }},
-  "location": {{
-    "value": null
-  }},
+  "name": null,
+  "age": null,
+  "location": null,
+  "gender": null,
+  "nationality": null,
+  "ethnicity": null,
+  "marital_status": null,
+  "visa_or_work_permit_status": null,
   "education": {{
-    "value": null,
-    "sentiment": null,
-    "confidence": null
+    "degree": null,
+    "major": null,
+    "institution": null,
+    "start_date": null,
+    "end_date": null,
+    "details": null
   }},
   "work_experience": {{
-    "values": [],
-    "sentiment": null,
-    "confidence": null
+    "title": null,
+    "company": null,
+    "location": null,
+    "start_date": null,
+    "end_date": null,
+    "responsibilities": [],
+    "achievements_in_role": [],
+    "projects_involved": []
   }},
-  "interests": {{
-    "values": [],
-    "sentiment": null,
-    "confidence": null
+  "professional_background_summary": null,
+  "personal_projects": {{
+    "name": null,
+    "description": null,
+    "technologies_used": [],
+    "link": null
   }},
-  "personality_traits": {{
-    "values": []
+  "publications_or_research": {{
+    "title": null,
+    "journal_or_conference": null,
+    "publication_date": null,
+    "authors": [],
+    "abstract_summary": null,
+    "link": null
   }},
+  "current_occupation": null,
+  "interests": [],
+  "goals": {{
+    "description": null,
+    "timeframe": null,
+    "relevance": null
+  }},
+  "motivations": {{
+    "description": null,
+    "source": null
+  }},
+  "values": {{
+    "name": null,
+    "significance": null
+  }},
+  "personality_traits": [],
+  "communication_style": null,
+  "preferred_learning_style": null,
   "skills": {{
-    "values": [],
-    "sentiment": null,
-    "confidence": null
+    "name": null,
+    "proficiency": null,
+    "category": null
   }},
-  "languages_spoken": {{
-    "values": [],
-    "sentiment": null,
-    "confidence": null
+  "certifications": {{
+    "name": null,
+    "issuing_organization": null,
+    "date_obtained": null,
+    "link": null
   }},
+  "tools_or_technologies_used": [],
+  "languages_spoken": [],
   "achievements": {{
-    "values": [],
-    "sentiment": null,
-    "confidence": null
+    "description": null,
+    "date": null,
+    "awarding_organization": null,
+    "type": null,
+    "is_major_achievement": null
+  }},
+  "past_challenges": {{
+    "description": null,
+    "how_overcome": null,
+    "lessons_learned": []
+  }},
+  "strengths": {{
+    "description": null,
+    "examples": []
+  }},
+  "weaknesses": {{
+    "description": null,
+    "steps_to_address": []
+  }},
+  "work_preferences": {{
+    "team_vs_individual": null,
+    "remote_vs_onsite": null,
+    "preferred_industry": null,
+    "ideal_role": null,
+    "company_size_preference": null,
+    "work_life_balance_importance": null,
+    "learning_growth_opportunities": null
+  }},
+  "social_engagement": {{
+    "volunteering_experience": [],
+    "community_involvement": []
   }},
   "contact_info": {{
-    "values": []
-  }}
+    "type": null,
+    "value": null
+  }},
+  "dialogue_type": []
 }}
 
 Interview:

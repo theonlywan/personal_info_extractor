@@ -1,33 +1,81 @@
 from schema.personal_profile import PersonalProfile
+from typing import List, Optional, Union, Any
+from pydantic import BaseModel
+
+def _is_empty(value: Any) -> bool:
+    """Checks if a value is considered empty."""
+    if value is None:
+        return True
+    if isinstance(value, str):
+        return value.strip() == ""
+    if isinstance(value, list):
+        return not value
+    if isinstance(value, BaseModel):
+        return not value.model_dump(exclude_defaults=True, exclude_none=True)
+    return False
+
+
+def _convert_value_to_text(value: Any, indent_level: int = 0) -> Optional[str]:
+    """
+    Recursively converts a Pydantic field value (or any value) into a text string
+    suitable for embedding. Handles nested models and lists of models.
+    """
+    if _is_empty(value):
+        return None
+
+    prefix = "  " * indent_level
+
+    if isinstance(value, str):
+        return value
+    elif isinstance(value, int) or isinstance(value, float):
+        return str(value)
+    elif isinstance(value, list):
+        item_texts = []
+        for item in value:
+            item_text = _convert_value_to_text(item, indent_level + 1)
+            if item_text:
+                item_texts.append(item_text.strip()) 
+
+        if item_texts:
+            if all(isinstance(item, str) for item in value):
+                return "; ".join(item_texts)
+            else:
+                return " ".join(item_texts)
+        return None
+
+    elif isinstance(value, BaseModel):
+        model_parts = []
+        for field_name, field_value in value.model_dump(exclude_none=True, exclude_defaults=True).items():
+            converted_field_value = _convert_value_to_text(field_value, indent_level + 1)
+            if converted_field_value:
+                model_parts.append(f"{field_name.replace('_', ' ').capitalize()}: {converted_field_value.strip()}")
+        
+        if model_parts:
+            return " | ".join(model_parts)
+        return None
+
+    return None
+
 
 def convert_profile_to_embeddable_text(profile: PersonalProfile) -> str:
-
-    if not profile:
+    """
+    Converts a PersonalProfile Pydantic model into a comprehensive text string
+    suitable for generating embeddings. Handles all nested structures.
+    """
+    if not profile or _is_empty(profile):
         return ""
 
     parts = []
 
-    if profile.name:
-        parts.append(f"Name: {profile.name}.")
-    if profile.age:
-        parts.append(f"Age: {profile.age} years old.")
-    if profile.location:
-        parts.append(f"Location: {profile.location}.")
-    if profile.education and profile.education.value:
-        parts.append(f"Education: {profile.education.value}. Sentiment: {profile.education.sentiment if profile.education.sentiment else 'N/A'}. Confidence: {profile.education.confidence if profile.education.confidence is not None else 'N/A'}.")
-    if profile.work_experience and profile.work_experience.values:
-        parts.append(f"Work Experience: {', '.join(profile.work_experience.values)}. Sentiment: {profile.work_experience.sentiment if profile.work_experience.sentiment else 'N/A'}. Confidence: {profile.work_experience.confidence if profile.work_experience.confidence is not None else 'N/A'}.")
-    if profile.interests and profile.interests.values:
-        parts.append(f"Interests: {', '.join(profile.interests.values)}. Sentiment: {profile.interests.sentiment if profile.interests.sentiment else 'N/A'}. Confidence: {profile.interests.confidence if profile.interests.confidence is not None else 'N/A'}.")
-    if profile.personality_traits:
-        parts.append(f"Personality: {', '.join(profile.personality_traits)}.")
-    if profile.skills and profile.skills.values:
-        parts.append(f"Skills: {', '.join(profile.skills.values)}. Sentiment: {profile.skills.sentiment if profile.skills.sentiment else 'N/A'}. Confidence: {profile.skills.confidence if profile.skills.confidence is not None else 'N/A'}.")
-    if profile.languages_spoken and profile.languages_spoken.values:
-        parts.append(f"Languages: {', '.join(profile.languages_spoken.values)}. Sentiment: {profile.languages_spoken.sentiment if profile.languages_spoken.sentiment else 'N/A'}. Confidence: {profile.languages_spoken.confidence if profile.languages_spoken.confidence is not None else 'N/A'}.")
-    if profile.achievements and profile.achievements.values:
-        parts.append(f"Achievements: {', '.join(profile.achievements.values)}. Sentiment: {profile.achievements.sentiment if profile.achievements.sentiment else 'N/A'}. Confidence: {profile.achievements.confidence if profile.achievements.confidence is not None else 'N/A'}.")
-    if profile.contact_info:
-        parts.append(f"Contact Info: {', '.join(profile.contact_info)}.")
+    for field_name, field_info in profile.model_fields.items():
+        value = getattr(profile, field_name)
 
-    return " ".join(parts)
+        if _is_empty(value):
+            continue
+
+        field_text = _convert_value_to_text(value)
+        
+        if field_text:
+            parts.append(f"{field_name.replace('_', ' ').capitalize()}: {field_text}.")
+
+    return " ".join(filter(None, parts)).strip()
