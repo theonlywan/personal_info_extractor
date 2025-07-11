@@ -1,4 +1,0 @@
-Interviewer: Welcome! Could you tell us a bit about yourself?
-Candidate: My name is David Chen. I'm a software engineer, and I graduated from Stanford University with a degree in Electrical Engineering. I've spent most of my career living and working in California.
-Interviewer: What are some of your passions outside of work?
-Candidate: I enjoy playing chess, building model airplanes, and going on long road trips. I'd say I'm quite strategic.

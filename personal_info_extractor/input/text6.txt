@@ -1,7 +1,0 @@
-Interviewer: Hi, could you give an introduction of yourself.
-Candidate: Hi, my name is John. I am 23 this year, and I recently completed a Bachelor's Degree in Mechanical Engineering at NUS.
-Interviewer: I see, and you are a Singapore Citizen, yes?
-Candidate: Yes, that is correct. Lived here my entire life.
-Interviewer: Good. What are some of your interests?
-Candidate: Well, in my free time, I enjoy being around nature. So, hiking, cycling, things like that. Mostly to get away from technology. But, I do also enjoy painting from time to time.
-Interviewer: Oh, how interesting.
