@@ -367,8 +367,7 @@ personal-profile-extractor/
 │   ├── validator_agent.py     # Validation agent node
 │   └── vectorDB_agent.py      # VectorDB storage agent node
 ├── prompts/
-│   ├── extractor_prompt.txt   # Prompt to be used for extraction
-│   └── older_prompts.txt      # Previously used prompts
+│   └── extractor_prompt.txt   # Prompt to be used for extraction
 ├── schema/
 │   └── personal_profile.py    # Pydantic schemas of personal profile and state
 ├── pages/
