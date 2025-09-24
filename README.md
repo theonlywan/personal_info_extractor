@@ -59,7 +59,6 @@ Let's get your project set up\! You'll primarily use `pip`, Python's standard pa
 ### Prerequisites
 
   * **Python**: You'll need Python installed on your computer. Aim for Python 3.9 or newer.
-      * [Image of Python logo]
       * **How to check**: Open your terminal or command prompt and type `python --version` or `python3 --version`. If it's not installed or is an older version, download it from [python.org](https://www.python.org/downloads/).
   * **FFmpeg**: This is crucial for handling audio files (MP3, WAV).
     \*
@@ -379,3 +378,4 @@ personal-profile-extractor/
     └── profile_to_text.py     # Converting profile to text form
 
 ```
+
